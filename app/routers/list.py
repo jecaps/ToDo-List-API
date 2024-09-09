@@ -13,7 +13,7 @@ def create_list(list: ListCreate, db: Session = Depends(get_db)) -> ListWithoutT
     new_list = List(**list.model_dump())
 
     if new_list.title == "":    
-        raise HTTPException(status_code=400, detail="Title is required")
+        raise HTTPException(status_code=400, detail="Title is required.")
 
     db.add(new_list)
     db.commit()
@@ -39,7 +39,20 @@ def read_list(id: int, db: Session = Depends(get_db)) -> ListSchema:
     list = db.query(List).filter(List.id == id).first()
 
     if list is None:
-        raise HTTPException(status_code=404, detail=f"List with id no. {id} not found")
+        raise HTTPException(status_code=404, detail=f"List with id no. {id} not found.")
     
     return list
 
+
+@router.put("/{id}")
+def update_list(id: int, list: ListCreate, db: Session = Depends(get_db))  -> ListSchema | None:
+    list_query = db.query(List).filter(List.id == id)
+    list_to_update = list_query.first()
+
+    if list_to_update is None:
+        raise HTTPException(status_code=404, detail=f"List with id no. {id} does not exist.")
+
+    list_query.update(list.model_dump())
+    db.commit()
+
+    return list_query.first()
