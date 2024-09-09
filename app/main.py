@@ -1,19 +1,16 @@
 from fastapi import FastAPI
 
-from app import models
-from app.database import SessionLocal, engine
+from app.models import Base    
+from app.database import engine
+from app.routers import list
 
-models.Base.metadata.create_all(bind=engine)
+print("Creating database tables...")
+Base.metadata.create_all(bind=engine)
+print("Database tables created.")
 
 app = FastAPI()
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app.include_router(list.router)
 
 @app.get("/")
 def read_root():
