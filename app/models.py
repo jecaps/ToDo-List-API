@@ -1,6 +1,5 @@
-from datetime import datetime, timezone
-
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, String,
+                        func)
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -12,7 +11,8 @@ class List(Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     title = Column(String, index=True, nullable=False)
     description = Column(String, nullable=True)
-    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
     todos = relationship("Todo", back_populates="list")
 
@@ -23,7 +23,7 @@ class Todo(Base):
     title = Column(String, index=True, nullable=False)
     details = Column(String, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)
-    created_at = Column(DateTime, default=datetime.now(timezone.utc), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     list_id = Column(Integer, ForeignKey("lists.id"))
 
     list = relationship("List", back_populates="todos")
