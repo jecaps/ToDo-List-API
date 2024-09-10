@@ -5,8 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
-
-# from app.models import List
+from app.models import List
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -36,3 +35,24 @@ def client(session):
             
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
+
+
+@pytest.fixture()
+def test_list(session):
+    list_data = [
+        {"title": "Test One", "description": "Test Description One"},
+        {"title": "Test Two", "description": "Test Description Two"},
+        {"title": "Test 3", "description": ""},
+    ]
+
+    def create_list_model(list):
+        return List(**list)
+    
+    lists_map = map(create_list_model, list_data)
+    lists = list(lists_map)
+
+    session.add_all(lists)
+    session.commit()
+
+    new_lists = session.query(List).all()
+    return new_lists
