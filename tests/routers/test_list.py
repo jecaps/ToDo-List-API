@@ -66,3 +66,14 @@ def test_update_list_not_found(client):
     assert response.status_code == 404
 
 
+def test_delete_list(client, test_list):
+    response = client.delete(f"/lists/{test_list[2].id}")
+    assert response.status_code == 204
+
+    response = client.delete(f"/lists/{test_list[2].id}")
+    assert response.status_code == 404
+
+
+def test_delete_list_not_found(client):
+    response = client.delete("/lists/999")
+    assert response.status_code == 404
