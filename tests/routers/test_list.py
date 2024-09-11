@@ -50,3 +50,19 @@ def test_read_list(client, test_list):
 def test_read_list_not_found(client):
     response = client.get("/lists/999")
     assert response.status_code == 404
+
+
+def test_update_list(client, test_list):
+    response = client.put(f"/lists/{test_list[0].id}", json={"title": "Updated Title", "description": "Updated Description"})
+    assert response.status_code == 200
+
+    updated_list = response.json()
+    assert updated_list["title"] == test_list[0].title
+    assert updated_list["description"] == test_list[0].description
+    
+
+def test_update_list_not_found(client):
+    response = client.put("/lists/999", json={"title": "Updated Title", "description": "Updated Description"})
+    assert response.status_code == 404
+
+
