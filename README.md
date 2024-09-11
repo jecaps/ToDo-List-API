@@ -6,7 +6,7 @@ This is a simple Todo List API built with FastAPI and SQLite.
 
 1. Clone the repository:
 ```
-git clone <repository-url>
+git clone https://github.com/jecaps/ToDo-List-API.git
 cd ToDo-List-Api
 ```
 2. Create a virtual environment and activate it:
@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 To run the application, use the following command:
 ```
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 ```
 
 The API will be available at `http://127.0.0.1:8000`.
@@ -48,8 +48,44 @@ The project includes two main models:
 
 ## API Endpoints
 
-(You can list your main API endpoints here once they're implemented)
+### Lists
+
+- **POST /lists**: Create a new list
+
+    - Request body: { "title": "string", "description": "string" }
+    - Response: Created list object
+
+
+- **GET /lists**: Retrieve all lists
+
+    - Query parameters:
+
+        - skip: Number of records to skip (default: 0)
+        - limit: Maximum number of records to return (default: 10)
+        - sort_by: Sort order for lists ("asc" or "desc", default: "desc")
+
+
+    - Response: Array of list objects
+
+
+- **GET /lists/{id}**: Retrieve a specific list
+
+    - Path parameter: id (integer)
+    - Response: List object
+
+
+- **PUT /lists/{id}**: Update a list
+
+    - Path parameter: id (integer)
+    - Request body: { "title": "string", "description": "string" }
+    - Response: Updated list object
+
+
+- **DELETE /lists/{id}**: Delete a list
+
+    - Path parameter: id (integer)
+    - Response: No content (204)
 
 ## Development
 
-This project is still in development. Future updates will include implementation of CRUD operations for lists and todo items, search functionality, and more.
+This project now includes full CRUD operations for lists. Future updates will include implementation of CRUD operations for todo items, search functionality, and more.
