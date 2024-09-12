@@ -22,7 +22,7 @@ def test_create_list(client, list_data):
 
 def test_create_list_invalid(client):
     response = client.post("/lists/", json={"title": "","description": "Test Description"})
-    assert response.status_code == 400
+    assert response.status_code == 422
 
 
 def test_read_lists(client, test_list):
@@ -65,6 +65,11 @@ def test_update_list_not_found(client):
     response = client.put("/lists/999", json={"title": "Updated Title", "description": "Updated Description"})
     assert response.status_code == 404
 
+
+def test_update_list_invalid(client, test_list):
+    response = client.put(f"/lists/{test_list[0].id}", json={"title": "","description": "Updated Description"})
+    assert response.status_code == 422
+    
 
 def test_delete_list(client, test_list):
     response = client.delete(f"/lists/{test_list[2].id}")
