@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
-from app.models import List
+from app.models import ListDB
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -46,7 +46,7 @@ def test_list(session):
     ]
 
     def create_list_model(list):
-        return List(**list)
+        return ListDB(**list)
     
     lists_map = map(create_list_model, list_data)
     lists = list(lists_map)
@@ -54,5 +54,5 @@ def test_list(session):
     session.add_all(lists)
     session.commit()
 
-    new_lists = session.query(List).all()
+    new_lists = session.query(ListDB).all()
     return new_lists

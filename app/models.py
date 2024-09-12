@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from app.database import Base
 
 
-class List(Base):
+class ListDB(Base):
     __tablename__ = "lists"
 
     id = Column(Integer, primary_key=True, index=True, nullable=False)
@@ -14,9 +14,9 @@ class List(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 
-    todos = relationship("Todo", back_populates="list")
+    todos = relationship("TodoDB", back_populates="list")
 
-class Todo(Base):
+class TodoDB(Base):
     __tablename__ = "todos"
 
     id = Column(Integer, primary_key=True, index=True, nullable=False)
@@ -24,7 +24,7 @@ class Todo(Base):
     details = Column(String, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    list_id = Column(Integer, ForeignKey("lists.id"))
+    list_id = Column(Integer, ForeignKey("lists.id", ondelete="CASCADE"))
 
-    list = relationship("List", back_populates="todos")
+    list = relationship("ListDB", back_populates="todos")
     
