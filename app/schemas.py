@@ -1,10 +1,11 @@
-from pydantic import BaseModel
 from datetime import datetime
-from typing import List as PyList, Optional
+
+from pydantic import BaseModel, Field
+
 
 class TodoBase(BaseModel):
     title: str
-    details: Optional[str] = None
+    details: str | None = None
 
 class TodoCreate(TodoBase):
     pass
@@ -14,13 +15,12 @@ class Todo(TodoBase):
     completed: bool
     created_at: datetime
     list_id: int
-
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ListBase(BaseModel):
-    title: str
-    description: Optional[str] = None
+    title: str = Field(..., min_length=1, max_length=100)
+    description: str | None = None
 
 class ListCreate(ListBase):
     pass
@@ -28,14 +28,14 @@ class ListCreate(ListBase):
 class List(ListBase):
     id: int
     created_at: datetime
-    todos: PyList[Todo] = []
-
+    updated_at: datetime
+    todos: list[Todo] = []
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class ListWithoutTodos(ListBase):
     id: int
     created_at: datetime
-
+    updated_at: datetime
     class Config:
-        orm_mode = True
+        from_attributes = True
