@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -44,4 +44,17 @@ def update_todo(todo_id: int, todo: TodoCreate, db: Session = Depends(get_db)) -
         return todo_to_update
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
+    
 
+@router.delete("/{todo_id}")
+def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> Response:
+    try:
+        todo_db = db.query(TodoDB).filter(TodoDB.id == todo_id).one()
+        db.delete(todo_db)
+        db.commit()
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
