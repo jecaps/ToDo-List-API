@@ -42,3 +42,20 @@ def test_get_todo(client, test_todo):
 def test_get_todo_not_found(client):
     response = client.get("/todos/999")
     assert response.status_code == 404
+
+
+def test_update_todo(client, test_todo):
+    todo_data = {"title": "Updated Title", "details": "Updated Details", "list_id": 1, "completed": False}
+    response = client.put(f"/todos/{test_todo[0].id}", json={"title": "Updated Title", "details": "Updated Details", "list_id": 1, "completed": False})
+    assert response.status_code == 200
+
+    updated_todo = response.json()
+    assert updated_todo["title"] == todo_data["title"]
+    assert updated_todo["details"] == todo_data["details"]
+    assert updated_todo["completed"] == todo_data["completed"]
+
+
+def test_update_todo_not_found(client):
+    todo_data = {"title": "Updated Title", "details": "Updated Details", "list_id": 1, "completed": False}
+    response = client.put("/todos/999", json=todo_data)
+    assert response.status_code == 404
