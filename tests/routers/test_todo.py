@@ -59,3 +59,13 @@ def test_update_todo_not_found(client):
     todo_data = {"title": "Updated Title", "details": "Updated Details", "list_id": 1, "completed": False}
     response = client.put("/todos/999", json=todo_data)
     assert response.status_code == 404
+
+
+def test_delete_todo(client, test_todo):
+    response = client.delete(f"/todos/{test_todo[0].id}")
+    assert response.status_code == 204
+
+
+def test_delete_todo_not_found(client):
+    response = client.delete("/todos/999")
+    assert response.status_code == 404
