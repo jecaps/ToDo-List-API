@@ -24,3 +24,21 @@ def test_create_todo(client, todo_data):
 def test_create_todo_invalid(client):
     response = client.post("/todos/", json={"title": "", "details": "Test Details", "list_id": 1})
     assert response.status_code == 422
+
+
+def test_get_todo(client, test_todo):
+    response = client.get(f"/todos/{test_todo[0].id}")
+    assert response.status_code == 200
+
+    todo = Todo(**response.json())
+    assert todo.id == test_todo[0].id
+    assert todo.title == test_todo[0].title
+    assert todo.details == test_todo[0].details
+    assert todo.list_id == test_todo[0].list_id
+    assert todo.completed == test_todo[0].completed
+    assert todo.created_at == test_todo[0].created_at
+
+
+def test_get_todo_not_found(client):
+    response = client.get("/todos/999")
+    assert response.status_code == 404

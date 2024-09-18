@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database import Base, get_db
 from app.main import app
-from app.models import ListDB
+from app.models import ListDB, TodoDB
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
 
@@ -56,3 +56,24 @@ def test_list(session):
 
     new_lists = session.query(ListDB).all()
     return new_lists
+
+
+@pytest.fixture()
+def test_todo(session, test_list):
+    todo_data = [
+        {"title": "Test One", "details": "Test Details", "list_id": test_list[0].id, "completed": True},
+        {"title": "Test Two", "details": "Test Details", "list_id": test_list[1].id},
+        {"title": "Test No Description", "details": "", "list_id": test_list[2].id},
+    ]
+
+    def create_todo_model(todo):
+        return TodoDB(**todo)
+    
+    todos_map = map(create_todo_model, todo_data)
+    todos = list(todos_map)
+
+    session.add_all(todos)
+    session.commit()
+
+    new_todos = session.query(TodoDB).all()
+    return new_todos
