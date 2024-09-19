@@ -86,6 +86,31 @@ The project includes two main models:
     - Path parameter: id (integer)
     - Response: No content (204)
 
+### Todos 
+
+- **POST /todos**: Create a new todo
+
+    - Request body: { "title": "string", "details": "string", "completed": boolean, "list_id": integer }
+    - Response: Created todo object
+
+- **GET /todos/{todo_id}**: Retrieve a specific todo
+
+    - Path parameter: todo_id (integer)
+    - Response: Todo object
+
+
+- **PUT /todos/{todo_id}**: Update a todo
+
+    - Path parameter: todo_id (integer)
+    - Request body: { "title": "string", "details": "string", "completed": boolean, "list_id": integer }
+    - Response: Updated todo object
+
+
+- **DELETE /todos/{todo_id}**: Delete a todo
+
+    - Path parameter: todo_id (integer)
+    - Response: No content (204)
+
 ## Development
 
-This project now includes full CRUD operations for lists. Future updates will include implementation of CRUD operations for todo items, search functionality, and more.
+This project now includes full CRUD operations for both lists and todos. Future updates may include search functionality and more advanced features like due dates or priority levels for todo items.
