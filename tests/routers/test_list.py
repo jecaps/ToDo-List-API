@@ -3,19 +3,19 @@ import pytest
 from app.schemas import List
 
 
-@pytest.mark.parametrize("list_data", [
+@pytest.mark.parametrize("data", [
     {"title": "Test One", "description": "Test Description"},
     {"title": "Test Two", "description": "Test Description"},
     {"title": "Test No Description", "description": ""},
 ])
-def test_create_list(client, list_data):
-    response = client.post("/lists/", json=list_data)
+def test_create_list(client, data):
+    response = client.post("/lists/", json=data)
     assert response.status_code == 201
 
     created_list = List(**response.json())
     assert created_list.id is not None
-    assert created_list.title == list_data["title"]
-    assert created_list.description == list_data["description"]
+    assert created_list.title == data["title"]
+    assert created_list.description == data["description"]
     assert created_list.created_at is not None
     assert created_list.updated_at is not None
 
@@ -25,26 +25,26 @@ def test_create_list_invalid(client):
     assert response.status_code == 422
 
 
-def test_read_lists(client, test_list):
+def test_read_lists(client, list_data):
     response = client.get("/lists/")
     assert response.status_code == 200
 
     list = response.json()
-    assert len(list) == len(test_list)
-    assert list[0]["title"] == test_list[0].title
-    assert list[0]["description"] == test_list[0].description
+    assert len(list) == len(list_data)
+    assert list[0]["title"] == list_data[0].title
+    assert list[0]["description"] == list_data[0].description
 
 
-def test_read_list(client, test_list):
-    response = client.get(f"/lists/{test_list[0].id}")
+def test_read_list(client, list_data):
+    response = client.get(f"/lists/{list_data[0].id}")
     assert response.status_code == 200
 
     list = List(**response.json())
-    assert list.id == test_list[0].id
-    assert list.title == test_list[0].title
-    assert list.description == test_list[0].description
-    assert list.created_at == test_list[0].created_at
-    assert list.updated_at == test_list[0].updated_at
+    assert list.id == list_data[0].id
+    assert list.title == list_data[0].title
+    assert list.description == list_data[0].description
+    assert list.created_at == list_data[0].created_at
+    assert list.updated_at == list_data[0].updated_at
 
 
 def test_read_list_not_found(client):
@@ -52,13 +52,13 @@ def test_read_list_not_found(client):
     assert response.status_code == 404
 
 
-def test_update_list(client, test_list):
-    response = client.put(f"/lists/{test_list[0].id}", json={"title": "Updated Title", "description": "Updated Description"})
+def test_update_list(client, list_data):
+    response = client.put(f"/lists/{list_data[0].id}", json={"title": "Updated Title", "description": "Updated Description"})
     assert response.status_code == 200
 
     updated_list = response.json()
-    assert updated_list["title"] == test_list[0].title
-    assert updated_list["description"] == test_list[0].description
+    assert updated_list["title"] == list_data[0].title
+    assert updated_list["description"] == list_data[0].description
     
 
 def test_update_list_not_found(client):
@@ -66,16 +66,16 @@ def test_update_list_not_found(client):
     assert response.status_code == 404
 
 
-def test_update_list_invalid(client, test_list):
-    response = client.put(f"/lists/{test_list[0].id}", json={"title": "","description": "Updated Description"})
+def test_update_list_invalid(client, list_data):
+    response = client.put(f"/lists/{list_data[0].id}", json={"title": "","description": "Updated Description"})
     assert response.status_code == 422
     
 
-def test_delete_list(client, test_list):
-    response = client.delete(f"/lists/{test_list[2].id}")
+def test_delete_list(client, list_data):
+    response = client.delete(f"/lists/{list_data[2].id}")
     assert response.status_code == 204
 
-    response = client.delete(f"/lists/{test_list[2].id}")
+    response = client.delete(f"/lists/{list_data[2].id}")
     assert response.status_code == 404
 
 
