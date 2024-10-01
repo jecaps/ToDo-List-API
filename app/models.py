@@ -1,5 +1,13 @@
-from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Integer, String,
-                        func)
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    func,
+)
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -24,6 +32,8 @@ class TodoDB(Base):
     details = Column(String, nullable=True)
     completed = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    due_date = Column(DateTime(timezone=True), nullable=True)
+    priority = Column(Enum("low", "medium", "high", name="priority"), nullable=False, default="medium")
     list_id = Column(Integer, ForeignKey("lists.id", ondelete="CASCADE"))
 
     list = relationship("ListDB", back_populates="todos")
