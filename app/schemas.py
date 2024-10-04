@@ -1,13 +1,10 @@
 from datetime import datetime
-import enum
 
 from pydantic import BaseModel, Field
 
+from app.utils import PriorityEnum
 
-class PriorityEnum(str, enum.Enum):
-    low = "low"
-    medium = "medium"
-    high = "high"
+
 class TodoBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=100)
     details: str | None = None

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
@@ -5,6 +7,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from app.database import get_db
 from app.models import ListDB, TodoDB
 from app.schemas import Todo, TodoCreate
+from app.utils import OrderEnum, PriorityEnum, SortByEnum, apply_filters, apply_sorting
 
 router = APIRouter(prefix="/todos", tags=["Todos"])
 
@@ -18,6 +21,21 @@ def create_todo(todo: TodoCreate, db: Session = Depends(get_db)) -> Todo:
     return new_todo
 
 
+@router.get("/")
+def get_todos(
+    due_date: datetime = None,
+    priority: PriorityEnum = None,
+    sort_by: SortByEnum = None,
+    order: OrderEnum = None,
+    db: Session = Depends(get_db),
+)  -> list[Todo]:
+    todo_db = db.query(TodoDB).order_by(TodoDB.created_at.desc())
+
+    todo_db = apply_filters(todo_db, due_date, priority)
+    todo_db = apply_sorting(todo_db, sort_by, order)
+    return todo_db.all()
+
+
 @router.get("/{todo_id}")
 def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:
     try:
@@ -25,7 +43,7 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:
         return todo_db
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
-    
+
 
 @router.put("/{todo_id}")
 def update_todo(todo_id: int, todo: TodoCreate, db: Session = Depends(get_db)) -> Todo:
