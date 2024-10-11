@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field
 
-from app.utils import PriorityEnum
+from app.todo_manager import PriorityEnum
 
 
 class TodoBase(BaseModel):
@@ -10,7 +10,7 @@ class TodoBase(BaseModel):
     details: str | None = None
     completed: bool = False
     due_date: datetime | None = None
-    priority: PriorityEnum = PriorityEnum.medium
+    priority: PriorityEnum = PriorityEnum.MEDIUM
 
 class TodoCreate(TodoBase):
     list_id: int
