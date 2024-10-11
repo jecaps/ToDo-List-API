@@ -52,7 +52,13 @@ The project includes two main models:
 
 - **POST /lists**: Create a new list
 
-    - Request body: { "title": "string", "description": "string" }
+    - Request body: 
+        ```
+        { 
+            "title": "string", 
+            "description": "string" 
+        }
+        ```
     - Response: Created list object
 
 
@@ -77,7 +83,13 @@ The project includes two main models:
 - **PUT /lists/{id}**: Update a list
 
     - Path parameter: id (integer)
-    - Request body: { "title": "string", "description": "string" }
+    - Request body:
+        ```
+        { 
+            "title": "string", 
+            "description": "string" 
+        }
+        ```
     - Response: Updated list object
 
 
@@ -90,8 +102,28 @@ The project includes two main models:
 
 - **POST /todos**: Create a new todo
 
-    - Request body: { "title": "string", "details": "string", "completed": boolean, "list_id": integer }
+    - Request body:
+        ```
+        { 
+            "title": "string", 
+            "details": "string", 
+            "completed": boolean, 
+            "due_date": datetime
+            "priority": "high" | "medium" | "low",
+            "list_id": integer, 
+        }
+        ```
     - Response: Created todo object
+
+
+- **GET /todos**: Retrieve todos with filtering and sorting
+    - Query Parameters:
+        - due_date: Filter by due_date
+        - priority: Filter by priority (high, medium, low)
+        - sort_by: Sort by field (due_date, priority, created_at)
+        - order: Sort order (asd, desc)
+    - Response: Array of filtered and sorted todo objects 
+
 
 - **GET /todos/{todo_id}**: Retrieve a specific todo
 
@@ -102,7 +134,17 @@ The project includes two main models:
 - **PUT /todos/{todo_id}**: Update a todo
 
     - Path parameter: todo_id (integer)
-    - Request body: { "title": "string", "details": "string", "completed": boolean, "list_id": integer }
+    - Request body:
+        ```
+        { 
+            "title": "string", 
+            "details": "string", 
+            "completed": boolean, 
+            "due_date": datetime
+            "priority": "high" | "medium" | "low",
+            "list_id": integer, 
+        }
+        ```
     - Response: Updated todo object
 
 
@@ -113,4 +155,10 @@ The project includes two main models:
 
 ## Development
 
-This project now includes full CRUD operations for both lists and todos. Future updates may include search functionality and more advanced features like due dates or priority levels for todo items.
+This project now includes full CRUD operations for both lists and todos, with advanced features including:
+
+- Priority levels: (HIGH, MEDIUM, LOW)
+- Due dates for todos
+- Flexible sorting options (by due date, priority or creation time)
+- Filtering capabilities (by due date and priority)
+- Error handling for invalid list references
