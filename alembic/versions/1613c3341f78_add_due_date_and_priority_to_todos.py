@@ -21,10 +21,8 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.add_column('todos', sa.Column('due_date', sa.DateTime(), nullable=True))
     op.add_column('todos', sa.Column('priority', sa.Enum('low', 'medium', 'high', name='priority'), nullable=False, server_default='medium'))
-    pass
 
 
 def downgrade() -> None:
     op.drop_column('todos', 'priority')
     op.drop_column('todos', 'due_date')
-    pass

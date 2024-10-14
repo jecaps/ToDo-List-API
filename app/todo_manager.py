@@ -1,6 +1,5 @@
 from datetime import datetime
 from enum import Enum
-from typing import List
 
 from fastapi import HTTPException, Response, status
 from sqlalchemy import case
@@ -53,7 +52,7 @@ class TodoManager:
         priority: PriorityEnum,
         sort_by: SortByEnum,
         order: OrderEnum
-    ) -> List[TodoDB]:
+    ) -> list[TodoDB]:
         query = self.db.query(TodoDB)
         query = self._apply_filters(query, due_date, priority)
         query = self._apply_sorting(query, sort_by, order)
