@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -61,10 +63,17 @@ def list_data(session):
 
 @pytest.fixture()
 def todo_data(session, list_data):
+    due_date = datetime(2024, 10, 21, 0, 0, 0)
     data = [
         {"title": "Test One", "details": "Test Details", "list_id": list_data[0].id, "completed": True},
-        {"title": "Test Two", "details": "Test Details", "list_id": list_data[1].id},
-        {"title": "Test No Description", "details": "", "list_id": list_data[2].id},
+        {"title": "Test Two", "details": "Test Details", "list_id": list_data[0].id, "priority": "high"},
+        {"title": "Test No Description", "details": "", "list_id": list_data[0].id, "due_date": due_date, "priority": "low"},
+        {"title": "Test One", "details": "Test Details", "list_id": list_data[1].id, "completed": True},
+        {"title": "Test Two", "details": "Test Details", "list_id": list_data[1].id, "priority": "high"},
+        {"title": "Test No Description", "details": "", "list_id": list_data[1].id, "due_date": due_date},
+        {"title": "Test One", "details": "Test Details", "list_id": list_data[2].id, "completed": True},
+        {"title": "Test Two", "details": "Test Details", "list_id": list_data[2].id, "priority": "high"},
+        {"title": "Test No Description", "details": "", "list_id": list_data[2].id, "due_date": due_date, "priority": "low"},
     ]
 
     def create_todo_model(todo):
