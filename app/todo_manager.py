@@ -2,11 +2,7 @@ from datetime import datetime
 from enum import Enum
 
 from fastapi import HTTPException, Response, status
-<<<<<<< HEAD
 from sqlalchemy import case, or_
-=======
-from sqlalchemy import case
->>>>>>> main
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -31,13 +27,9 @@ class TodoManager:
     def __init__(self, db: Session):
         self.db = db
 
-<<<<<<< HEAD
     def _apply_filters(self, query, due_date: datetime = None, priority: PriorityEnum = None, search: str = None):
         if search: 
             query = query.filter(or_(TodoDB.title.contains(search), TodoDB.details.contains(search)))
-=======
-    def _apply_filters(self, query, due_date: datetime = None, priority: PriorityEnum = None):
->>>>>>> main
         if due_date:
             query = query.filter(TodoDB.due_date == due_date)
         if priority:
@@ -60,19 +52,12 @@ class TodoManager:
         self,
         due_date: datetime,
         priority: PriorityEnum,
-<<<<<<< HEAD
         search: str,
-=======
->>>>>>> main
         sort_by: SortByEnum,
         order: OrderEnum
     ) -> list[TodoDB]:
         query = self.db.query(TodoDB)
-<<<<<<< HEAD
         query = self._apply_filters(query, due_date, priority, search)
-=======
-        query = self._apply_filters(query, due_date, priority)
->>>>>>> main
         query = self._apply_sorting(query, sort_by, order)
         return query.all()
 
