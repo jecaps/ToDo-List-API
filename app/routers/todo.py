@@ -18,11 +18,12 @@ def create_todo(todo: TodoCreate, db: Session = Depends(get_db)) -> Todo:
 def get_todos(
     due_date: datetime = None,
     priority: PriorityEnum = None,
+    search: str = None,
     sort_by: SortByEnum = SortByEnum.CREATED_AT,
     order: OrderEnum = OrderEnum.DESC,
     db: Session = Depends(get_db),
 )  -> list[Todo]:
-    return TodoManager(db).get_todos(due_date, priority, sort_by, order)
+    return TodoManager(db).get_todos(due_date, priority, search, sort_by, order)
 
 @router.get("/{todo_id}")
 def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:

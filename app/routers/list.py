@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy import or_
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -19,8 +20,11 @@ def create_list(list: ListCreate, db: Session = Depends(get_db)) -> List:
 
 
 @router.get("/")
-def read_lists(skip: int = 0, limit: int = 10, sort_by: str = "desc", db: Session = Depends(get_db))   -> list[List]:
+def read_lists(skip: int = 0, limit: int = 10, sort_by: str = "desc", search: str = "", db: Session = Depends(get_db))   -> list[List]:
     lists_db = db.query(ListDB)
+
+    if search:
+        lists_db = lists_db.filter(or_(ListDB.title.contains(search), ListDB.description.contains(search)))
 
     if sort_by == "asc":
         lists_db = lists_db.order_by(ListDB.updated_at.asc())

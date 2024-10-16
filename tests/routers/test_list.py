@@ -26,13 +26,69 @@ def test_create_list_invalid(client):
 
 
 def test_read_lists(client, list_data):
-    response = client.get("/lists/")
+    response = client.get("/lists/", params={"limit": 20})
     assert response.status_code == 200
 
-    list = response.json()
-    assert len(list) == len(list_data)
-    assert list[0]["title"] == list_data[0].title
-    assert list[0]["description"] == list_data[0].description
+    lists = [List(**list_item) for list_item in response.json()]
+    assert len(lists) == len(list_data)
+
+
+@pytest.mark.parametrize("skip", [1, 2, 3, 4, 5])
+def test_read_lists_skip(client, skip, list_data):
+    response = client.get("/lists/", params={"skip": skip})
+    assert response.status_code == 200
+
+    lists = [List(**list_item) for list_item in response.json()]
+    assert len(lists) == len(list_data) - skip
+
+
+@pytest.mark.parametrize("limit", [1, 2, 3, 4, 5])
+def test_read_lists_limit(client, limit, list_data):
+    response = client.get("/lists/", params={"limit": limit})
+    assert response.status_code == 200
+
+    lists = [List(**list_item) for list_item in response.json()]
+    assert len(lists) == limit
+
+
+@pytest.mark.parametrize("sort_by", ["asc", "desc"])
+def test_read_lists_sort(client, sort_by, list_data):
+    response = client.get("/lists/", params={"sort_by": sort_by})
+    assert response.status_code == 200
+
+    lists = [List(**list_item) for list_item in response.json()]
+    assert all(lists[i].updated_at >= lists[i + 1].updated_at for i in range(len(lists) - 1) if sort_by == "desc")
+    assert all(lists[i].updated_at <= lists[i + 1].updated_at for i in range(len(lists) - 1) if sort_by == "asc")
+
+
+@pytest.mark.parametrize("keyword, should_exist", [
+    ("Test", True),
+    ("One", True),
+    ("Two", True),
+    ("Three", True),
+    ("Four", True),
+    ("Five", True),
+    ("Six", True),
+    ("Seven", True),
+    ("Eight", True),
+    ("Nine", True),
+    ("Ten", True),
+    ("Eleven", False),
+    ("Description", True),
+])
+def test_read_lists_search(client, keyword, should_exist, list_data):
+    response = client.get("/lists/", params={"search": keyword})
+    assert response.status_code == 200
+
+    lists = [List(**list_item) for list_item in response.json()]
+    
+    if should_exist:
+        assert len(lists) > 0
+        assert all(keyword.lower() in list.title.lower() or 
+                   (list.description and keyword.lower() in list.description.lower()) 
+                   for list in lists)
+    else:
+        assert len(lists) == 0
 
 
 def test_read_list(client, list_data):

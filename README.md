@@ -69,6 +69,7 @@ The project includes two main models:
         - skip: Number of records to skip (default: 0)
         - limit: Maximum number of records to return (default: 10)
         - sort_by: Sort order for lists ("asc" or "desc", default: "desc")
+        - search: Search list by keyword
 
 
     - Response: Array of list objects
@@ -121,6 +122,7 @@ The project includes two main models:
         - due_date: Filter by due_date
         - priority: Filter by priority (high, medium, low)
         - sort_by: Sort by field (due_date, priority, created_at)
+        - search: Search by keyword
         - order: Sort order (asc, desc)
     - Response: Array of filtered and sorted todo objects 
 
