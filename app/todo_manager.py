@@ -6,6 +6,7 @@ from fastapi import HTTPException, Response, status
 from sqlalchemy import case, or_
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.exc import NoResultFound
 
 from app.models import ListDB, TodoDB
 
@@ -69,8 +70,8 @@ class TodoManager:
         try:
             todo_db = self.db.query(TodoDB).filter(TodoDB.id == todo_id).one()
             return todo_db
-        except SQLAlchemyError as e:
-            if "NoResultFound" in str(e):
+        except SQLAlchemyError:
+            if NoResultFound:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred.")
 
@@ -113,7 +114,7 @@ class TodoManager:
             self.db.delete(todo_db)
             self.db.commit()
             return Response(status_code=status.HTTP_204_NO_CONTENT)
-        except SQLAlchemyError as e:
-            if "NoResultFound" in str(e):
+        except SQLAlchemyError:
+            if NoResultFound:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred.")
