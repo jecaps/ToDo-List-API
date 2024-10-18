@@ -162,5 +162,6 @@ This project now includes full CRUD operations for both lists and todos, with ad
 - Priority levels: (HIGH, MEDIUM, LOW)
 - Due dates for todos
 - Flexible sorting options (by due date, priority or creation time)
-- Filtering capabilities (by due date and priority)
-- Error handling for invalid list references
+- Filtering capabilities (by due date, priority, and search keywords)
+- Error handling for invalid list and todo references
+- Validation for data given
