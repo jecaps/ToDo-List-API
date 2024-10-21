@@ -37,6 +37,6 @@ def update_todo(todo_id: int, todo: TodoCreate, db: Session = Depends(get_db)) -
 def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> Response:
     return TodoManager(db).delete_todo(todo_id)
 
-@router.patch("/{todo_id}")
+@router.patch("/{todo_id}/complete")
 def toggle_completed(todo_id: int, db: Session = Depends(get_db)) -> Todo:
     return TodoManager(db).toggle_completed(todo_id)

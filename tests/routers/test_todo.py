@@ -196,3 +196,16 @@ def test_delete_todo(client, todo_data):
 def test_delete_todo_not_found(client):
     response = client.delete("/todos/999")
     assert response.status_code == 404
+
+@pytest.mark.parametrize("todo_index", [0, 1, 2, 3, 4, 5, 6, 7, 8])
+def test_toggle_completed(client, todo_data, todo_index):
+    response = client.patch(f"/todos/{todo_data[todo_index].id}/complete")
+    assert response.status_code == 200
+
+    updated_todo = Todo(**response.json())
+    assert updated_todo.completed != todo_data[todo_index].completed
+
+
+def test_toggle_completed_not_found(client):
+    response = client.patch("/todos/999/complete")
+    assert response.status_code == 404
