@@ -124,6 +124,7 @@ The project includes two main models:
         - sort_by: Sort by field (due_date, priority, created_at)
         - search: Search by keyword
         - order: Sort order (asc, desc)
+        - completed: Filter by status (boolean)
     - Response: Array of filtered and sorted todo objects 
 
 
@@ -155,6 +156,12 @@ The project includes two main models:
     - Path parameter: todo_id (integer)
     - Response: No content (204)
 
+
+- **PATCH /todos/{todo_id}/complete**: Toggle todo completion status
+
+    - Path parameter: todo_id (integer)
+    - Response: Todo object
+
 ## Development
 
 This project now includes full CRUD operations for both lists and todos, with advanced features including:
@@ -162,6 +169,6 @@ This project now includes full CRUD operations for both lists and todos, with ad
 - Priority levels: (HIGH, MEDIUM, LOW)
 - Due dates for todos
 - Flexible sorting options (by due date, priority or creation time)
-- Filtering capabilities (by due date, priority, and search keywords)
+- Filtering capabilities (by due date, priority, search keywords and completion status)
 - Error handling for invalid list and todo references
 - Validation for data given
