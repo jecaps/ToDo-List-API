@@ -21,9 +21,10 @@ def get_todos(
     search: str = None,
     sort_by: SortByEnum = SortByEnum.CREATED_AT,
     order: OrderEnum = OrderEnum.DESC,
+    completed: bool = None,
     db: Session = Depends(get_db),
 )  -> list[Todo]:
-    return TodoManager(db).get_todos(due_date, priority, search, sort_by, order)
+    return TodoManager(db).get_todos(due_date, priority, search, sort_by, order, completed)
 
 @router.get("/{todo_id}")
 def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:

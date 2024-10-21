@@ -29,13 +29,15 @@ class TodoManager:
     def __init__(self, db: Session):
         self.db = db
 
-    def _apply_filters(self, query, due_date: datetime = None, priority: PriorityEnum = None, search: str = None):
+    def _apply_filters(self, query, due_date: datetime = None, priority: PriorityEnum = None, search: str = None, completed: bool = None):
         if search: 
             query = query.filter(or_(TodoDB.title.contains(search), TodoDB.details.contains(search)))
         if due_date:
             query = query.filter(TodoDB.due_date == due_date)
         if priority:
             query = query.filter(TodoDB.priority == priority)
+        if completed:
+            query = query.filter(TodoDB.completed == completed)
         return query
 
     def _apply_sorting(self, query, sort_by: SortByEnum, order: OrderEnum):
@@ -56,11 +58,12 @@ class TodoManager:
         priority: PriorityEnum,
         search: str,
         sort_by: SortByEnum,
-        order: OrderEnum
+        order: OrderEnum,
+        completed: bool,
     ) -> list[TodoDB]:
         try:
             query = self.db.query(TodoDB)
-            query = self._apply_filters(query, due_date, priority, search)
+            query = self._apply_filters(query, due_date, priority, search, completed)
             query = self._apply_sorting(query, sort_by, order)
             return query.all()
         except SQLAlchemyError:
