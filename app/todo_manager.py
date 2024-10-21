@@ -121,3 +121,16 @@ class TodoManager:
             if NoResultFound:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred.")
+        
+
+    def toggle_completed(self, todo_id: int)  -> TodoDB:
+        try:
+            todo_db = self.db.query(TodoDB).filter(TodoDB.id == todo_id).one()
+            todo_db.completed = not todo_db.completed
+            self.db.commit()
+            self.db.refresh(todo_db)
+            return todo_db
+        except SQLAlchemyError:
+            if NoResultFound:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Todo with id no. {todo_id} not found.")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database error occurred.")
