@@ -20,7 +20,7 @@ def get_todos(
     search: str = None,
     sort_by: SortByEnum = SortByEnum.CREATED_AT,
     order: OrderEnum = OrderEnum.DESC,
-    completed: bool = None,
+    completed: bool | None = None,
     db: Session = Depends(get_db),
 )  -> list[Todo]:
     return TodoManager(db).get_todos(due_date, priority, search, sort_by, order, completed)
