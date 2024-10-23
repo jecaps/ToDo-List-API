@@ -13,7 +13,6 @@ router = APIRouter(prefix="/todos", tags=["Todos"])
 def create_todo(todo: TodoCreate, db: Session = Depends(get_db)) -> Todo:
     return TodoManager(db).create_todo(todo)
 
-
 @router.get("/")
 def get_todos(
     due_date: datetime = None,
@@ -21,9 +20,10 @@ def get_todos(
     search: str = None,
     sort_by: SortByEnum = SortByEnum.CREATED_AT,
     order: OrderEnum = OrderEnum.DESC,
+    completed: bool | None = None,
     db: Session = Depends(get_db),
 )  -> list[Todo]:
-    return TodoManager(db).get_todos(due_date, priority, search, sort_by, order)
+    return TodoManager(db).get_todos(due_date, priority, search, sort_by, order, completed)
 
 @router.get("/{todo_id}")
 def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:
@@ -33,7 +33,10 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:
 def update_todo(todo_id: int, todo: TodoCreate, db: Session = Depends(get_db)) -> Todo:
     return TodoManager(db).update_todo(todo_id, todo)
     
-
 @router.delete("/{todo_id}")
 def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> Response:
     return TodoManager(db).delete_todo(todo_id)
+
+@router.patch("/{todo_id}/complete")
+def toggle_completed(todo_id: int, db: Session = Depends(get_db)) -> Todo:
+    return TodoManager(db).toggle_completed(todo_id)
