@@ -71,7 +71,7 @@ def list_data(session):
 
 @pytest.fixture()
 def todo_data(session, list_data):
-    due_date = datetime(2024, 10, 21, 0, 0, 0)
+    due_date = datetime(2124, 10, 21, 0, 0, 0)
     data = [
         {"title": "Test One", "details": "Test Details", "list_id": list_data[0].id, "completed": True},
         {"title": "Test Two", "details": "Test Details", "list_id": list_data[0].id, "priority": "high"},

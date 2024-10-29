@@ -80,6 +80,10 @@ class TodoManager:
 
     def create_todo(self, todo_data: dict)  -> TodoDB:
         try:
+            todo_dict = todo_data.model_dump()
+            if todo_dict.get("priotiry", None) is None:
+                todo_dict['priority'] = PriorityEnum.MEDIUM.value
+                
             new_todo = TodoDB(**todo_data.model_dump())
             self.db.add(new_todo)
             self.db.commit()

@@ -21,6 +21,7 @@ def test_create_todo(client, data):
     assert created_todo.details == data["details"]
     assert created_todo.list_id == data["list_id"]
     assert created_todo.completed == data.get("completed", False)
+    assert created_todo.priority == data.get("priority", "medium")
 
 
 def test_create_todo_invalid(client):

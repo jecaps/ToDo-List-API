@@ -172,3 +172,5 @@ This project now includes full CRUD operations for both lists and todos, with ad
 - Filtering capabilities (by due date, priority, search keywords and completion status)
 - Error handling for invalid list and todo references
 - Validation for data given
+- Custom validators for fields, Specific validations for dates and priority levels
+- Data sanitization for string inputs
